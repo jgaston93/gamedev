@@ -14,7 +14,7 @@ class Entity
     
     void getId(uint32_t& id);
     void addComponent(Component* component, ReturnCode& return_code);
-    void getComponent(ComponentType component_type, Component** component, ReturnCode return_code);
+    void getComponent(ComponentType component_type, Component** component, ReturnCode& return_code);
 
     private:
     const uint32_t m_id;

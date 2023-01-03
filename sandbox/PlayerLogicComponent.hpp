@@ -11,7 +11,6 @@ class PlayerLogicComponent : public LogicComponent
     void start();
     void update();
 
-
     protected:
 };
 

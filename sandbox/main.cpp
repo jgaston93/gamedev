@@ -13,58 +13,48 @@
 #include "FrameworkSystems/RenderSystem.hpp"
 #include "FrameworkSystems/InputSystem.hpp"
 #include "FrameworkSystems/LogicSystem.hpp"
+#include "CustomInitializationSystem.hpp"
 
 int main(int argv, char* args[])
 {
-    PositionComponent position_component;
-    VelocityComponent velocity_component;
-    TextureComponent texture_component;
-    PlayerLogicComponent player_logic_component;
+    if(argv < 2)
+    {
+        printf("No Conifguration Specified\n");
+        return 1;
+    }
 
-    Vector velocity_vector(10, 10);
-    velocity_component.setVelocity(velocity_vector);
+    Scene** scenes;
+    uint32_t num_scenes;
 
     SDL_Init(SDL_INIT_EVERYTHING);
+    IMG_Init(IMG_INIT_PNG);
 
     char window_name[] = "Sandbox";
     char image_filename[] = "Test_Pic.bmp";
     SDL_Window* win = SDL_CreateWindow(window_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, 0);
-    IMG_Init(IMG_INIT_PNG);
-
-    SDL_Texture* texture = IMG_LoadTexture(renderer, image_filename);
-
-    texture_component.setTexture(texture);
     
-    Entity entity(0, 64);
-
-    player_logic_component.setEntity(&entity);
-
-    ReturnCode return_code;    
-    entity.addComponent((Component*)&position_component, return_code);
-    entity.addComponent((Component*)&velocity_component, return_code);
-    entity.addComponent((Component*)&texture_component, return_code);
-    entity.addComponent((Component*)&player_logic_component, return_code);
-
-    Scene scene(0, 10);
-    scene.addEntity(&entity, return_code);
+    CustomInitializationSystem initialization_system;
+    initialization_system.loadData(args[1], renderer);
+    initialization_system.getScenes(scenes, num_scenes);
 
     MessageBus message_bus(64, 64);
 
+    ReturnCode return_code = ReturnCode::NO_ERROR;
     PhysicsSystem physics_system;
     physics_system.setMessageBus(&message_bus, return_code);
-    physics_system.setScene(&scene);
+    physics_system.setScene(scenes[0]);
 
     RenderSystem render_system(win, renderer);
     render_system.setMessageBus(&message_bus, return_code);
-    render_system.setScene(&scene);
+    render_system.setScene(scenes[0]);
 
     InputSystem input_system;
     input_system.setMessageBus(&message_bus, return_code);
 
     LogicSystem logic_system;
     logic_system.setMessageBus(&message_bus, return_code);
-    logic_system.setScene(&scene);
+    logic_system.setScene(scenes[0]);
 
     uint32_t prev_time = 0;
     uint32_t num_frames = 0;

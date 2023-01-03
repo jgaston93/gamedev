@@ -54,7 +54,7 @@ void Entity::addComponent(Component* component, ReturnCode& return_code)
     }
 }
 
-void Entity::getComponent(ComponentType component_type, Component** component, ReturnCode return_code)
+void Entity::getComponent(ComponentType component_type, Component** component, ReturnCode& return_code)
 {
     return_code = NOT_FOUND;
     for(uint32_t i = 0; i < m_num_components; i++)
