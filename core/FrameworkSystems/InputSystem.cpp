@@ -11,6 +11,11 @@ InputSystem::~InputSystem()
 
 }
 
+void InputSystem::setInputMap(InputMap* input_map)
+{
+    m_input_map = input_map;
+}
+
 void InputSystem::handleMessage(Message message, ReturnCode& return_code)
 {
     return_code = ReturnCode::NO_ERROR;
@@ -36,6 +41,7 @@ void InputSystem::update(ReturnCode& return_code)
                     message.message_type = MessageType::KEYPRESS;
                     message.message_data = event.key.keysym.scancode;
                     m_message_bus->postMessage(message, return_code);
+                    m_input_map->setPressed(event.key.keysym.scancode, true);
                 }
                 break;
             case SDL_KEYUP:
@@ -44,6 +50,7 @@ void InputSystem::update(ReturnCode& return_code)
                     message.message_type = MessageType::KEYRELEASE;
                     message.message_data = event.key.keysym.scancode;
                     m_message_bus->postMessage(message, return_code);
+                    m_input_map->setPressed(event.key.keysym.scancode, false);
                 }
                 break;
             default:

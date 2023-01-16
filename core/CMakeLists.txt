@@ -1,4 +1,5 @@
 add_library(Core Scene/Scene.cpp
+                 Common/InputMap.cpp
                  FrameworkSystems/System.cpp
                  FrameworkSystems/PhysicsSystem.cpp
                  FrameworkSystems/RenderSystem.cpp
@@ -13,6 +14,7 @@ add_library(Core Scene/Scene.cpp
                  EntityComponentSystem/VelocityComponent.cpp
                  EntityComponentSystem/ScaleComponent.cpp
                  EntityComponentSystem/TextureComponent.cpp
+                 EntityComponentSystem/AnimationComponent.cpp
                  EntityComponentSystem/LogicComponent.cpp
                  MessageBus/MessageBus.cpp)
 

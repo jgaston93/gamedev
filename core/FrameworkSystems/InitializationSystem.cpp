@@ -4,9 +4,12 @@
 #include "InitializationSystem.hpp"
 #include "SDL2/SDL_image.h"
 #include "rapidxml_utils.hpp"
+#include "FrameworkSystems/InitializationSystem.hpp"
 #include "EntityComponentSystem/PositionComponent.hpp"
+#include "EntityComponentSystem/BoundingBoxComponent.hpp"
 #include "EntityComponentSystem/VelocityComponent.hpp"
 #include "EntityComponentSystem/TextureComponent.hpp"
+#include "EntityComponentSystem/LogicComponent.hpp"
 
 InitializationSystem::InitializationSystem()
 {
@@ -18,7 +21,7 @@ InitializationSystem::~InitializationSystem()
 
 }
 
-void InitializationSystem::loadData(char* filename, SDL_Renderer* renderer)
+void InitializationSystem::loadData(char* filename, SDL_Renderer* renderer, InputMap* input_map)
 {
     // TODO: lots of error checking
     rapidxml::file<> xml_file(filename);
@@ -65,10 +68,10 @@ void InitializationSystem::loadData(char* filename, SDL_Renderer* renderer)
             for(uint32_t k = 0; k < num_components; k++)
             {
                 Component* component = 0;
-                createComponent(component_node, component, renderer);
+                createComponent(component_node, component, renderer, entity, input_map);
                 if(!component)
                 {
-                    createCustomComponent(component_node, component, renderer, entity);
+                    createCustomComponent(component_node, component);
                 }
                 if(component)
                 {
@@ -85,7 +88,7 @@ void InitializationSystem::loadData(char* filename, SDL_Renderer* renderer)
     }
 }
 
-void InitializationSystem::createComponent(rapidxml::xml_node<>* component_node, Component*& component, SDL_Renderer* renderer)
+void InitializationSystem::createComponent(rapidxml::xml_node<>* component_node, Component*& component, SDL_Renderer* renderer, Entity* entity, InputMap* input_map)
 {
     rapidxml::xml_node<>* component_type_node = component_node->first_node("component_type");
 
@@ -99,6 +102,17 @@ void InitializationSystem::createComponent(rapidxml::xml_node<>* component_node,
         Vector position_vector(x, y);
         PositionComponent* position_component = (PositionComponent*)component;
         position_component->setPosition(position_vector);
+    }
+    if(strcmp(component_type_node->value(), "BoundingBox") == 0)
+    {
+        component = new BoundingBoxComponent();
+        rapidxml::xml_node<>* bound_x_node = component_node->first_node("bound_x");
+        rapidxml::xml_node<>* bound_y_node = component_node->first_node("bound_y");
+        float x = atof(bound_x_node->value());
+        float y = atof(bound_y_node->value());
+        Vector bound_vector(x, y);
+        BoundingBoxComponent* bounding_box_component = (BoundingBoxComponent*)component;
+        bounding_box_component->setBoundingBox(bound_vector);
     }
     else if(strcmp(component_type_node->value(), "Velocity") == 0)
     {
@@ -118,9 +132,21 @@ void InitializationSystem::createComponent(rapidxml::xml_node<>* component_node,
         TextureComponent* texture_component = (TextureComponent*)component;
         texture_component->setTexture(IMG_LoadTexture(renderer, texture_node->value()));
     }
+    else if(strcmp(component_type_node->value(), "Logic") == 0)
+    {
+        rapidxml::xml_node<>* logic_class_node = component_node->first_node("logic_class");
+        createCustomLogicComponent(logic_class_node->value(), component_node, component);
+        LogicComponent* logic_component = (LogicComponent*)component;
+        logic_component->setEntity(entity);
+        logic_component->setInputMap(input_map);
+    }
+}
+void InitializationSystem::createCustomComponent(rapidxml::xml_node<>* component_node, Component*& component)
+{
+
 }
 
-void InitializationSystem::createCustomComponent(rapidxml::xml_node<>* component_node, Component*& component, SDL_Renderer* renderer, Entity* entity)
+void InitializationSystem::createCustomLogicComponent(char* logic_class_name, rapidxml::xml_node<>* component_node, Component*& component)
 {
 
 }

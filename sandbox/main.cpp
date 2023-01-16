@@ -33,9 +33,18 @@ int main(int argv, char* args[])
     char image_filename[] = "Test_Pic.bmp";
     SDL_Window* win = SDL_CreateWindow(window_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, 0);
+
+    const uint32_t num_inputs = 4;
+    SDL_Scancode inputs[num_inputs] = { SDL_SCANCODE_LEFT, SDL_SCANCODE_RIGHT, SDL_SCANCODE_UP, SDL_SCANCODE_DOWN};
+    
+    InputMap input_map(num_inputs);
+    for(uint32_t i = 0; i < num_inputs; i++)
+    {
+        input_map.addInput(inputs[i]);
+    }
     
     CustomInitializationSystem initialization_system;
-    initialization_system.loadData(args[1], renderer);
+    initialization_system.loadData(args[1], renderer, &input_map);
     initialization_system.getScenes(scenes, num_scenes);
 
     MessageBus message_bus(64, 64);
@@ -51,6 +60,7 @@ int main(int argv, char* args[])
 
     InputSystem input_system;
     input_system.setMessageBus(&message_bus, return_code);
+    input_system.setInputMap(&input_map);
 
     LogicSystem logic_system;
     logic_system.setMessageBus(&message_bus, return_code);

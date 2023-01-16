@@ -10,9 +10,10 @@ enum ComponentType
     VELOCITY,
     TEXTURE,
     LOGIC,
+    ANIMATION
 };
 
-class Component
+struct Component
 {
     public:
     Component(ComponentType component_type);

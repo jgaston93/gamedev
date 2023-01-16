@@ -5,12 +5,12 @@ TextureComponent::TextureComponent() : Component(ComponentType::TEXTURE)
 
 }
 
-void TextureComponent::setTexture(SDL_Texture* position_vector) 
+void TextureComponent::setTexture(SDL_Texture* texture) 
 { 
-    m_texture = position_vector;
+    m_texture = texture;
 }
 
-void TextureComponent::getTexture(SDL_Texture*& position_vector) 
+void TextureComponent::getTexture(SDL_Texture*& texture) 
 { 
-    position_vector = m_texture;
+    texture = m_texture;
 }

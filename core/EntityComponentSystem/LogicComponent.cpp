@@ -12,3 +12,8 @@ void LogicComponent::setEntity(Entity* entity)
 {
     m_entity = entity;
 }
+
+void LogicComponent::setInputMap(InputMap* input_map)
+{
+    m_input_map = input_map;
+}

@@ -10,8 +10,10 @@ class PlayerLogicComponent : public LogicComponent
     void event(Message message);
     void start();
     void update();
+    void setPlayerSpeed(float speed);
 
-    protected:
+    private:
+    float m_speed;
 };
 
 #endif // PLAYER_LOGIC_COMPONENT_HPP

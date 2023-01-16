@@ -11,14 +11,18 @@ CustomInitializationSystem::~CustomInitializationSystem()
 
 }
 
-void CustomInitializationSystem::createCustomComponent(rapidxml::xml_node<>* component_node, Component*& component, SDL_Renderer* renderer, Entity* entity)
+void CustomInitializationSystem::createCustomComponent(rapidxml::xml_node<>* component_node, Component*& component)
 {
-    rapidxml::xml_node<>* component_type_node = component_node->first_node("component_type");
 
-    if(strcmp(component_type_node->value(), "PlayerLogicComponent") == 0)
+}
+
+void CustomInitializationSystem::createCustomLogicComponent(char* logic_class_name, rapidxml::xml_node<>* component_node, Component*& component)
+{
+    if(strcmp(logic_class_name, "PlayerLogicComponent") == 0)
     {
+        rapidxml::xml_node<>* player_speed_node = component_node->first_node("player_speed");
         component = new PlayerLogicComponent();
         PlayerLogicComponent* player_logic_component = (PlayerLogicComponent*)component;
-        player_logic_component->setEntity(entity);
+        player_logic_component->setPlayerSpeed(atof(player_speed_node->value()));
     }
 }

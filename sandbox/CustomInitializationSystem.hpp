@@ -12,7 +12,8 @@ class CustomInitializationSystem : public InitializationSystem
     ~CustomInitializationSystem();
 
     private:
-    void createCustomComponent(rapidxml::xml_node<>* component_node, Component*& component, SDL_Renderer* renderer, Entity* entity);
+    void createCustomComponent(rapidxml::xml_node<>* component_node, Component*& component);
+    void createCustomLogicComponent(char* logic_class_name, rapidxml::xml_node<>* component_node, Component*& component);
 };
 
 #endif // CUSTOM_INITIALIZATION_SYSTEM_HPP
